@@ -14,9 +14,9 @@ module.exports = {
       //  (December + first 7 days of the new year to view the total raised)
       const d = new Date();
       if (d.getMonth() === 11 || (d.getMonth() === 0 && d.getDate() <= 7)) {
-        jaffamod.api.get('https://jinglejam.yogscast.com/api/total').then(data => {
+        jaffamod.api.get('https://jinglejam.yogscast.com/api/total').then(res => {
           const year = d.getMonth() === 11 ? d.getFullYear() : d.getFullYear() - 1; // Account for being in January
-          reply(`We've currently raised a total of ${getBold(`$${data.formatted_total}`, discord)} for charity during Jingle Jam ${year} so far! Donate now at https://humble.com/yogs`);
+          reply(`We've currently raised a total of ${getBold(`$${res.data.formatted_total}`, discord)} for charity during Jingle Jam ${year} so far! Donate now at https://humble.com/yogs`);
         }).catch(() => {
           reply(`The total amount couldn't be determined currently. ${getEmote('yogP3', discord)} Please try again later.`);
         });
