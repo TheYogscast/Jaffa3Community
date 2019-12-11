@@ -7,7 +7,7 @@ const getBold = (string, discord) => {
 };
 
 const getLink = (link, discord) => {
-    return discord ? `<${link}>` : link;
+  return discord ? `<${link}>` : link;
 };
 
 module.exports = {
@@ -17,7 +17,7 @@ module.exports = {
       // Determine if it's Jingle Jam time
       //  (December + first 7 days of the new year to view the total raised)
       const d = new Date();
-      if (d.getMonth() === 11 || (d.getMonth() === 0 && d.getDate() <= 7)) {
+      if (d.getMonth() === 11 || d.getMonth() === 0 && d.getDate() <= 7) {
         jaffamod.api.get('https://jinglejam.yogscast.com/api/total').then(res => {
           if (!res || !res.data || !res.data.formatted_total) {
             console.error('Couldn\'t run total command, got bad data', res.data);
