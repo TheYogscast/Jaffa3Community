@@ -39,7 +39,8 @@ module.exports = {
             "error",
             "single",
             {
-                "avoidEscape": true
+                "avoidEscape": true,
+                "allowTemplateLiterals": true
             }
         ],
         "quote-props": [
