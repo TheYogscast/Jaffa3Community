@@ -6,7 +6,13 @@
   "repository": "https://github.com/Akhawais/Jaffa3Community",
   "author": "Akhawais",
   "license": "MIT",
+  "scripts": {
+    "test": "npm run eslint",
+    "eslint": "eslint '**/*.js'",
+    "eslint:fix": "npm run eslint -- --fix"
+  },
   "dependencies": {
-    "dogeify-js": "^1.1.0"
+    "dogeify-js": "^1.1.0",
+    "eslint": "^6.7.2"
   }
 }
