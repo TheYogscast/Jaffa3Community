@@ -24,8 +24,7 @@ module.exports = {
             throw new Error(); // Force ourselves into the catch block
           }
           const year = d.getMonth() === 11 ? d.getFullYear() : d.getFullYear() - 1; // Account for being in January
-          reply(`We've raised a total of ${getBold(`$${res.data.formatted_total}`, discord)} for charity during Jingle Jam ${year} so far!`
-            + ` Donate now at ${getLink('https://humble.com/yogs', discord)}`);
+          reply(`We've raised a total of ${getBold(`$${res.data.formatted_total}`, discord)} for charity during Jingle Jam ${year} so far! Donate now at ${getLink('https://humble.com/yogs', discord)}`);
         }).catch(() => {
           reply(`The total amount couldn't be determined currently. ${getEmote('yogP3', discord)} Please try again later.`);
         });

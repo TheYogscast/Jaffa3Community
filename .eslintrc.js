@@ -11,7 +11,8 @@ module.exports = {
         "no-unused-vars": [
             "error",
             {
-                "caughtErrors": "all"
+                "caughtErrors": "all",
+                "args": "none"
             }
         ],
         "no-use-before-define": [
@@ -24,7 +25,9 @@ module.exports = {
             "error",
             {
                 "code": 200,
-                "ignoreComments": true
+                "ignoreComments": true,
+                "ignoreStrings": true,
+                "ignoreTemplateLiterals": true
             }
         ],
         "semi": [

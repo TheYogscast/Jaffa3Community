@@ -4,7 +4,7 @@ module.exports = {
   name: 'Fun',
   async module(jaffamod) {
 
-    jaffamod.registerCommand('dogeify', (message, reply) => {
+    jaffamod.registerCommand('dogeify', (message, reply, discord) => {
       reply(dogeify(message.content));
     }, '<string>');
 
