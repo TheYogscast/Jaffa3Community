@@ -9,10 +9,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: cd modules
-      run: cd modules
-
     - name: Read .nvmrc
+      working-directory: ./modules
       run: echo "##[set-output name=NVMRC;]$(cat .nvmrc)"
       id: nvm
 
@@ -21,7 +19,10 @@ jobs:
       with:
         node-version: "${{ steps.nvm.outputs.NVMRC }}"
 
-    - name: npm i and test
-      run: |
-        npm i
-        npm test
+    - name: Install dependencies
+      working-directory: ./modules
+      run: npm install
+
+    - name: Run tests
+      working-directory: ./modules
+      run: npm test
