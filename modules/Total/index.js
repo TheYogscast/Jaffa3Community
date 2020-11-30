@@ -1,35 +1,30 @@
-const getEmote = (emote, discord) => {
-  return discord ? `:${emote}:` : emote;
-};
-
-const getBold = (string, discord) => {
-  return discord ? `**${string}**` : string;
-};
-
-const getLink = (link, discord) => {
-  return discord ? `<${link}>` : link;
-};
-
 module.exports = {
   name: 'Total',
   module(jaffamod) {
     jaffamod.registerCommand('total', (message, reply, discord) => {
-      // Determine if it's Jingle Jam time
-      //  (December + first 7 days of the new year to view the total raised)
-      const d = new Date();
-      if (d.getMonth() === 11 || d.getMonth() === 0 && d.getDate() <= 7) {
+      // Only run during JingleJam + first week of January
+      if (jaffamod.utils.isJingleJamExt()) {
         jaffamod.api.get('https://jinglejam.yogscast.com/api/total').then(res => {
+          // Validate the response from API
           if (!res || !res.data || !res.data.formatted_total) {
             console.error(`Couldn't run total command, got bad data`, res.data);
             throw new Error(); // Force ourselves into the catch block
           }
-          const year = d.getMonth() === 11 ? d.getFullYear() : d.getFullYear() - 1; // Account for being in January
-          reply(`We've raised a total of ${getBold(`$${res.data.formatted_total}`, discord)} for charity during Jingle Jam ${year} so far! Donate now at ${getLink('https://humble.com/yogs', discord)}`);
-        }).catch(() => {
-          reply(`The total amount couldn't be determined currently. ${getEmote('yogP3', discord)} Please try again later.`);
-        });
+
+          // Get the year, accounting for being in January
+          const d = new Date();
+          const year = d.getMonth() === 11 ? d.getFullYear() : d.getFullYear() - 1;
+
+          // Message time
+          reply(`We've raised ${jaffamod.utils.getBold(`$${res.data.formatted_total}`, discord)} for charity during Jingle Jam ${year} so far! Donate now at ${jaffamod.utils.getLink('https://humble.com/yogs', discord)}`);
+        })
+          .catch(() => {
+            // Web request failed or returned invalid data
+            reply(`The total amount couldn't be determined. ${jaffamod.utils.getEmote('yogP3', discord)} Please try again later.`);
+          });
       } else {
-        reply(`It's currently not Jingle Jam time. ${getEmote('yogP3', discord)} We look forward to seeing you in December to raise more money for charity once again!`);
+        // Not currently the best time of the year :(
+        reply(`It's not currently Jingle Jam time. ${jaffamod.utils.getEmote('yogP3', discord)} We look forward to seeing you in December to raise more money for charity once again!`);
       }
     });
   }
