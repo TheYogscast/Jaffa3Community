@@ -23,7 +23,7 @@ module.exports = {
         const year = d.getMonth() === 11 ? d.getFullYear() : d.getFullYear() - 1;
 
         // Message time
-        reply(`We've raised ${jaffamod.utils.getBold(`$${res.data.formatted_total}`, discord)} for charity during Jingle Jam ${year} so far! Donate now at ${jaffamod.utils.getLink('https://humble.com/yogs', discord)}`);
+        reply(`We've raised ${jaffamod.utils.getBold(`$${res.data.formatted_total}`, discord)} for charity during Jingle Jam ${year} so far! Donate now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
       })
         .catch(() => {
           // Web request failed or returned invalid data
