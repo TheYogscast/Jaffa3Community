@@ -30,8 +30,8 @@ module.exports = {
 
         // Time since launch
         // TODO: Down the road, cap this once bundle sales end, so the per hour/day stats don't get worse & worse
-        const hoursSinceLaunch = (d - new Date(year, 11, 1, 17, 0, 0, 0)) / 1000 / 60 / 60;
-        const daysSinceLaunch = hoursSinceLaunch / 24;
+        const hoursSinceLaunch = Math.max((d - new Date(year, 11, 1, 17, 0, 0, 0)) / 1000 / 60 / 60, 1);
+        const daysSinceLaunch = Math.max(hoursSinceLaunch / 24, 1);
 
         // Stats!
         const total = jaffamod.utils.getBold(formatMoney(parseFloat(res.data.total)), discord);
