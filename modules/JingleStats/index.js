@@ -1,4 +1,6 @@
-const formatMoney = value => `£${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const formatMoney = (currency, value) =>
+  `${currency}${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
 const shookEmote = (jaffamod, discord) => {
   const shook = ['yogWow', 'yogSog', 'yogPog', 'yogPag', 'yogLog', 'yogBog'];
   return jaffamod.utils.getEmote(shook[Math.floor(Math.random() * shook.length)], discord);
@@ -20,7 +22,7 @@ module.exports = {
       // Get the total raised from the magical API
       jaffamod.api.get('https://jinglejam.yogscast.com/api/total').then(res => {
         // Validate the response from API
-        if (!res || !res.data || !res.data.total || !res.data.donations_with_reward) {
+        if (!res || !res.data || !res.data.total || !res.data.total_usd || !res.data.donations_with_reward) {
           console.error(`Couldn't run jinglestats command, got bad data`, res.data);
           throw new Error(); // Force ourselves into the catch block
         }
@@ -34,20 +36,21 @@ module.exports = {
         const daysSinceLaunch = Math.max(hoursSinceLaunch / 24, 1);
 
         // Stats!
-        const total = jaffamod.utils.getBold(formatMoney(parseFloat(res.data.total)), discord);
+        const total = jaffamod.utils.getBold(formatMoney('£', parseFloat(res.data.total)), discord);
+        const totalUsd = jaffamod.utils.getBold(formatMoney('$', parseFloat(res.data.total_usd)), discord);
         const bundles = jaffamod.utils.getBold(res.data.donations_with_reward.toLocaleString(), discord);
-        const perBundle = jaffamod.utils.getBold(formatMoney(parseFloat(res.data.total) / res.data.donations_with_reward), discord);
-        const perHour = jaffamod.utils.getBold(formatMoney(parseFloat(res.data.total) / hoursSinceLaunch), discord);
+        const perBundle = jaffamod.utils.getBold(formatMoney('£', parseFloat(res.data.total) / res.data.donations_with_reward), discord);
+        const perHour = jaffamod.utils.getBold(formatMoney('£', parseFloat(res.data.total) / hoursSinceLaunch), discord);
         const bundlesPerHour = jaffamod.utils.getBold(Math.round(res.data.donations_with_reward / hoursSinceLaunch).toLocaleString(), discord);
-        const perDay = jaffamod.utils.getBold(formatMoney(parseFloat(res.data.total) / daysSinceLaunch), discord);
+        const perDay = jaffamod.utils.getBold(formatMoney('£', parseFloat(res.data.total) / daysSinceLaunch), discord);
         const bundlesPerDay = jaffamod.utils.getBold(Math.round(res.data.donations_with_reward / daysSinceLaunch).toLocaleString(), discord);
 
         // Message time
-        reply(`We've raised a total of ${total} with ${bundles} bundles claimed for charity during Jingle Jam ${year} so far!
- That works out to an average of ${perBundle} donated to awesome charities per bundle claimed! ${shookEmote(jaffamod, discord)}
- Per hour, that's approximately ${perHour} donated and ${bundlesPerHour} bundles claimed.
- Per day, that's roughly ${bundlesPerDay} bundles claimed and ${perDay} donated on average.
- Get involved by donating now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
+        reply(`We've raised a total of ${total} (${totalUsd}) for charity, with ${bundles} bundles claimed, during Jingle Jam ${year} so far!`
+          + ` That works out to an average of ${perBundle} donated to awesome charities per bundle claimed! ${shookEmote(jaffamod, discord)}`
+          + ` Per hour, that's approximately ${perHour} donated and ${bundlesPerHour} bundles claimed.`
+          + ` Or, instead, that's roughly ${bundlesPerDay} bundles claimed and ${perDay} donated per day on average.`
+          + ` Get involved by donating now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
       })
         .catch(() => {
           // Web request failed or returned invalid data
