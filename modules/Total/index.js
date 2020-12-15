@@ -14,7 +14,7 @@ module.exports = {
       // Get the total raised from the magical API
       jaffamod.api.get('https://jinglejam.yogscast.com/api/total').then(res => {
         // Validate the response from API
-        if (!res || !res.data || !res.data.total) {
+        if (!res || !res.data || !res.data.total || !res.data.total_usd) {
           console.error(`Couldn't run total command, got bad data`, res.data);
           throw new Error(); // Force ourselves into the catch block
         }
@@ -22,15 +22,16 @@ module.exports = {
         // Get the year, accounting for being in January
         const year = d.getMonth() === 11 ? d.getFullYear() : d.getFullYear() - 1;
 
-        // Get the value raised (GBP)
+        // Get the value raised
         const raised = `£${res.data.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        const raisedUsd = `$${res.data.total_usd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
         // Message for bundle being active
         if (jaffamod.utils.isJingleJam())
-          return reply(`We've raised ${jaffamod.utils.getBold(raised, discord)} for charity during Jingle Jam ${year} so far! Donate now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
+          return reply(`We've raised ${jaffamod.utils.getBold(raised, discord)} (${jaffamod.utils.getBold(raisedUsd, discord)}) for charity during Jingle Jam ${year} so far! Donate now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
 
         // Message for post-bundle
-        reply(`We raised ${jaffamod.utils.getBold(raised, discord)} for charity during Jingle Jam ${year}! Thank you for supporting some wonderful charities.`);
+        reply(`We raised ${jaffamod.utils.getBold(raised, discord)} (${jaffamod.utils.getBold(raisedUsd, discord)}) for charity during Jingle Jam ${year}! Thank you for supporting some wonderful charities.`);
       })
         .catch(() => {
           // Web request failed or returned invalid data
