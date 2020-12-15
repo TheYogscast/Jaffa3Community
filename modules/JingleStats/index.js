@@ -30,9 +30,13 @@ module.exports = {
         // Get the year, accounting for being in January
         const year = d.getMonth() === 11 ? d.getFullYear() : d.getFullYear() - 1;
 
+        // Track when the bundle starts/ends
+        const bundleLaunch = new Date(year, 11, 1, 17, 0, 0, 0);
+        const bundleEnd = new Date(year, 11, 15, 0, 0, 0, 0);
+
         // Time since launch
-        // TODO: Down the road, cap this once bundle sales end, so the per hour/day stats don't get worse & worse
-        const hoursSinceLaunch = Math.max((d - new Date(year, 11, 1, 17, 0, 0, 0)) / 1000 / 60 / 60, 1);
+        const timeSinceLaunch = Math.min(d - bundleLaunch, bundleEnd - bundleLaunch);
+        const hoursSinceLaunch = Math.max(timeSinceLaunch / 1000 / 60 / 60, 1);
         const daysSinceLaunch = Math.max(hoursSinceLaunch / 24, 1);
 
         // Stats!
@@ -45,12 +49,20 @@ module.exports = {
         const perDay = jaffamod.utils.getBold(formatMoney('£', parseFloat(res.data.total) / daysSinceLaunch), discord);
         const bundlesPerDay = jaffamod.utils.getBold(Math.round(res.data.donations_with_reward / daysSinceLaunch).toLocaleString(), discord);
 
-        // Message time
-        reply(`We've raised a total of ${total} (${totalUsd}) for charity, with ${bundles} bundles claimed, during Jingle Jam ${year} so far!`
-          + ` That works out to an average of ${perBundle} donated to awesome charities per bundle claimed! ${shookEmote(jaffamod, discord)}`
-          + ` Per hour, that's approximately ${perHour} donated and ${bundlesPerHour} bundles claimed.`
-          + ` Or, instead, that's roughly ${bundlesPerDay} bundles claimed and ${perDay} donated per day on average.`
-          + ` Get involved by donating now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
+        // Message for bundle being active
+        if (jaffamod.utils.isJingleJam())
+          return reply(`We've raised a total of ${total} (${totalUsd}) for charity, with ${bundles} bundles claimed, during Jingle Jam ${year} so far!`
+            + ` That works out to an average of ${perBundle} donated to awesome charities per bundle claimed! ${shookEmote(jaffamod, discord)}`
+            + ` Per hour, that's approximately ${perHour} donated and ${bundlesPerHour} bundles claimed.`
+            + ` Or, instead, that's roughly ${bundlesPerDay} bundles claimed and ${perDay} donated per day on average.`
+            + ` Get involved by donating now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
+
+        // Message for post-bundle
+        reply(`We raised a total of ${total} (${totalUsd}) for charity, with ${bundles} bundles claimed, during Jingle Jam ${year}!`
+          + ` That worked out to ${perBundle} donated to awesome charities per bundle claimed on average! ${shookEmote(jaffamod, discord)}`
+          + ` Hourly, ${bundlesPerHour} bundles were claimed and ${perHour} was donated to charity. `
+          + ` Or, per day during the Jingle Jam, ${bundlesPerDay} bundles were claimed and ${perDay} donated.`
+          + ` Thank you for supporting some wonderful charities.`);
       })
         .catch(() => {
           // Web request failed or returned invalid data
