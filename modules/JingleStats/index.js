@@ -30,9 +30,13 @@ module.exports = {
         // Get the year, accounting for being in January
         const year = d.getMonth() === 11 ? d.getFullYear() : d.getFullYear() - 1;
 
+        // Track when the bundle starts/ends
+        const bundleLaunch = new Date(year, 11, 1, 17, 0, 0, 0);
+        const bundleEnd = new Date(year, 11, 15, 0, 0, 0, 0);
+
         // Time since launch
-        // TODO: Down the road, cap this once bundle sales end, so the per hour/day stats don't get worse & worse
-        const hoursSinceLaunch = Math.max((d - new Date(year, 11, 1, 17, 0, 0, 0)) / 1000 / 60 / 60, 1);
+        const timeSinceLaunch = Math.min(d - bundleLaunch, bundleEnd - bundleLaunch);
+        const hoursSinceLaunch = Math.max(timeSinceLaunch / 1000 / 60 / 60, 1);
         const daysSinceLaunch = Math.max(hoursSinceLaunch / 24, 1);
 
         // Stats!
