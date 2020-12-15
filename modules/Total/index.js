@@ -25,8 +25,12 @@ module.exports = {
         // Get the value raised (GBP)
         const raised = `£${res.data.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-        // Message time
-        reply(`We've raised ${jaffamod.utils.getBold(raised, discord)} for charity during Jingle Jam ${year} so far! Donate now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
+        // Message for bundle being active
+        if (jaffamod.utils.isJingleJam())
+          return reply(`We've raised ${jaffamod.utils.getBold(raised, discord)} for charity during Jingle Jam ${year} so far! Donate now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
+
+        // Message for post-bundle
+        reply(`We raised ${jaffamod.utils.getBold(raised, discord)} for charity during Jingle Jam ${year}! Thank you for supporting some wonderful charities.`);
       })
         .catch(() => {
           // Web request failed or returned invalid data
