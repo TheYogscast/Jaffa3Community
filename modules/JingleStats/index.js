@@ -45,12 +45,20 @@ module.exports = {
         const perDay = jaffamod.utils.getBold(formatMoney('£', parseFloat(res.data.total) / daysSinceLaunch), discord);
         const bundlesPerDay = jaffamod.utils.getBold(Math.round(res.data.donations_with_reward / daysSinceLaunch).toLocaleString(), discord);
 
-        // Message time
-        reply(`We've raised a total of ${total} (${totalUsd}) for charity, with ${bundles} bundles claimed, during Jingle Jam ${year} so far!`
-          + ` That works out to an average of ${perBundle} donated to awesome charities per bundle claimed! ${shookEmote(jaffamod, discord)}`
-          + ` Per hour, that's approximately ${perHour} donated and ${bundlesPerHour} bundles claimed.`
-          + ` Or, instead, that's roughly ${bundlesPerDay} bundles claimed and ${perDay} donated per day on average.`
-          + ` Get involved by donating now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
+        // Message for bundle being active
+        if (jaffamod.utils.isJingleJam())
+          return reply(`We've raised a total of ${total} (${totalUsd}) for charity, with ${bundles} bundles claimed, during Jingle Jam ${year} so far!`
+            + ` That works out to an average of ${perBundle} donated to awesome charities per bundle claimed! ${shookEmote(jaffamod, discord)}`
+            + ` Per hour, that's approximately ${perHour} donated and ${bundlesPerHour} bundles claimed.`
+            + ` Or, instead, that's roughly ${bundlesPerDay} bundles claimed and ${perDay} donated per day on average.`
+            + ` Get involved by donating now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
+
+        // Message for post-bundle
+        reply(`We raised a total of ${total} (${totalUsd}) for charity, with ${bundles} bundles claimed, during Jingle Jam ${year}!`
+          + ` That worked out to ${perBundle} donated to awesome charities per bundle claimed on average! ${shookEmote(jaffamod, discord)}`
+          + ` Hourly, ${bundlesPerHour} bundles were claimed and ${perHour} was donated to charity. `
+          + ` Or, per day during the Jingle Jam, ${bundlesPerDay} bundles were claimed and ${perDay} donated.`
+          + ` Thank you for supporting some wonderful charities.`);
       })
         .catch(() => {
           // Web request failed or returned invalid data
