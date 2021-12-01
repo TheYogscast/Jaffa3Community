@@ -6,7 +6,7 @@ const charityMap = {
   'Cancer Research UK': 'CRUK',
   'The Mental Health Foundation': 'Mental Health Foundation',
   'War Child UK': 'War Child',
-  'Whale and Dolphin Conservation (WDC)': 'WDC',
+  'Whale and Dolphin Conservation (WDC)': 'WDC'
 };
 
 module.exports = {
