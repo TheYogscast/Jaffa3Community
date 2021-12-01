@@ -1,10 +1,5 @@
-const formatMoney = (currency, value) =>
-  `${currency}${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-const shookEmote = (jaffamod, discord) => {
-  const shook = ['yogWow', 'yogSog', 'yogPog', 'yogPag', 'yogLog', 'yogBog'];
-  return jaffamod.utils.getEmote(shook[Math.floor(Math.random() * shook.length)], discord);
-};
+const formatMoney = require('../../utils/formatMoney');
+const shookEmote = require('../../utils/shookEmote');
 
 module.exports = {
   name: 'JingleStats',
@@ -40,13 +35,13 @@ module.exports = {
         const daysSinceLaunch = Math.max(hoursSinceLaunch / 24, 1);
 
         // Stats!
-        const total = jaffamod.utils.getBold(formatMoney('£', parseFloat(res.data.total)), discord);
-        const totalUsd = jaffamod.utils.getBold(formatMoney('$', parseFloat(res.data.total_usd)), discord);
+        const total = jaffamod.utils.getBold(formatMoney('£', res.data.total), discord);
+        const totalUsd = jaffamod.utils.getBold(formatMoney('$', res.data.total_usd), discord);
         const bundles = jaffamod.utils.getBold(res.data.donations_with_reward.toLocaleString(), discord);
-        const perBundle = jaffamod.utils.getBold(formatMoney('£', parseFloat(res.data.total) / res.data.donations_with_reward), discord);
-        const perHour = jaffamod.utils.getBold(formatMoney('£', parseFloat(res.data.total) / hoursSinceLaunch), discord);
+        const perBundle = jaffamod.utils.getBold(formatMoney('£', res.data.total / res.data.donations_with_reward), discord);
+        const perHour = jaffamod.utils.getBold(formatMoney('£', res.data.total / hoursSinceLaunch), discord);
         const bundlesPerHour = jaffamod.utils.getBold(Math.round(res.data.donations_with_reward / hoursSinceLaunch).toLocaleString(), discord);
-        const perDay = jaffamod.utils.getBold(formatMoney('£', parseFloat(res.data.total) / daysSinceLaunch), discord);
+        const perDay = jaffamod.utils.getBold(formatMoney('£', res.data.total / daysSinceLaunch), discord);
         const bundlesPerDay = jaffamod.utils.getBold(Math.round(res.data.donations_with_reward / daysSinceLaunch).toLocaleString(), discord);
 
         // Message for bundle being active

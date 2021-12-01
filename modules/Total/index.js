@@ -1,3 +1,5 @@
+const formatMoney = require('../../utils/formatMoney');
+
 module.exports = {
   name: 'Total',
   module(jaffamod) {
@@ -23,8 +25,8 @@ module.exports = {
         const year = d.getMonth() === 11 ? d.getFullYear() : d.getFullYear() - 1;
 
         // Get the value raised
-        const raised = `£${res.data.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        const raisedUsd = `$${res.data.total_usd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        const raised = formatMoney('£', res.data.total);
+        const raisedUsd = formatMoney('$', res.data.total_usd);
 
         // Message for bundle being active
         if (jaffamod.utils.isJingleJam())
