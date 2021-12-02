@@ -37,10 +37,10 @@ module.exports = {
 
         // Message for bundle being active
         if (jaffamod.utils.isJingleJam())
-          return reply(`${charities.join(', ')}. Get involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
+          return reply(`${charities.join(',\n')}.\nGet involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
 
         // Message for post-bundle
-        reply(`${charities.join(', ')}. Thank you for supporting some wonderful charities.`);
+        reply(`${charities.join(',\n')}.\nThank you for supporting some wonderful charities.`);
       })
         .catch(() => {
           // Web request failed or returned invalid data
