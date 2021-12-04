@@ -1,4 +1,5 @@
 const formatMoney = require('../../utils/formatMoney');
+const { getDates, msgNotJingleJam, msgNotBundleLaunched} = require('../../utils/jingleJam');
 
 // Shorten some charity names
 const charityMap = {
@@ -13,14 +14,15 @@ module.exports = {
   name: 'JingleCharities',
   module(jaffamod) {
     jaffamod.registerCommand('jinglecharities', (message, reply, discord) => {
+      // Get key dates for JingleJam
+      const jingleDates = getDates();
+      const now = new Date();
+
       // Only run during JingleJam + first week of January
-      if (!jaffamod.utils.isJingleJamExt())
-        return reply(`It's not currently Jingle Jam time. ${jaffamod.utils.getEmote('yogP3', discord)} We look forward to seeing you in December to raise more money for charity once again!`);
+      if (now < jingleDates.start || now > jingleDates.extended) return reply(msgNotJingleJam(jaffamod, discord));
 
       // Bundle hasn't yet launched
-      const d = new Date();
-      if (d.getMonth() === 11 && d.getDate() === 1 && d.getHours() < 17)
-        return reply(`The Jingle Jam bundle hasn't launched yet! ${jaffamod.utils.getEmote('yogP3', discord)} Get ready to get the bundle and raise some money for charity once again!`);
+      if (now < jingleDates.launch) return reply(msgNotBundleLaunched(jaffamod, discord));
 
       // Get the campaign data from the Tiltify API
       jaffamod.api.get('https://api.tiltify.com/custom/yoggscast-2021').then(res => {
@@ -36,7 +38,7 @@ module.exports = {
           .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
         // Message for bundle being active
-        if (jaffamod.utils.isJingleJam())
+        if (now < jingleDates.end)
           return reply(`${charities.join(', ')}. Get involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
 
         // Message for post-bundle
