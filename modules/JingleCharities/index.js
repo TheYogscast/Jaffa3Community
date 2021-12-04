@@ -1,5 +1,5 @@
 const formatMoney = require('../../utils/formatMoney');
-const { getDates, msgNotJingleJam, msgNotBundleLaunched} = require('../../utils/jingleJam');
+const { getDates, msgNotJingleJam, msgNotBundleLaunched } = require('../../utils/jingleJam');
 
 // Shorten some charity names
 const charityMap = {

@@ -6,7 +6,7 @@ const getDates = (d = undefined) => {
     start: new Date(year, 11, 1, 0, 0, 0, 0), // When the commands start working
     launch: new Date(year, 11, 1, 17, 0, 0, 0), // When the commands start returning data (bundle available)
     end: new Date(year, 11, 15, 0, 0, 0, 0), // When the commands switch to past tense (bundle ended)
-    extended: new Date(year + 1, 0, 8, 0, 0, 0, 0), // When the commands stop working
+    extended: new Date(year + 1, 0, 8, 0, 0, 0, 0) // When the commands stop working
   });
 };
 
@@ -17,5 +17,5 @@ const msgNotBundleLaunched = (jaffamod, discord) => `The Jingle Jam bundle hasn'
 module.exports = Object.freeze({
   getDates,
   msgNotJingleJam,
-  msgNotBundleLaunched,
+  msgNotBundleLaunched
 });
