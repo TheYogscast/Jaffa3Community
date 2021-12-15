@@ -39,7 +39,7 @@ module.exports = {
 
         // Message for bundle being active
         if (now < jingleDates.end)
-          return reply(`${charities.join(', ')}. Get involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
+          return reply(`${charities.join(',\n')}.\nGet involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
 
         // Message for post-bundle
         reply(`${charities.join(',\n')}.\nThank you for supporting some wonderful charities.`);
