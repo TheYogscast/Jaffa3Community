@@ -42,7 +42,7 @@ module.exports = {
           return reply(`${charities.join(', ')}. Get involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
 
         // Message for post-bundle
-        reply(`${charities.join(', ')}. Thank you for supporting some wonderful charities.`);
+        reply(`${charities.join(',\n')}.\nThank you for supporting some wonderful charities.`);
       })
         .catch(() => {
           // Web request failed or returned invalid data
