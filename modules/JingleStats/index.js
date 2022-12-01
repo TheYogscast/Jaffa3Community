@@ -24,8 +24,7 @@ module.exports = {
           || !res.data.average || !res.data.average.pounds || !res.data.average.dollars
           || !res.data.bundles || !res.data.bundles.sold
           || !res.data.entire || !res.data.entire.amount || !res.data.entire.amount.pounds || !res.data.entire.amount.dollars) {
-          console.error(`Couldn't run jinglestats command, got bad data`, res.data);
-          throw new Error(); // Force ourselves into the catch block
+          throw new Error(`Got bad data: ${JSON.stringify(res.data)}`); // Force ourselves into the catch block
         }
 
         // Time since launch
@@ -70,7 +69,9 @@ module.exports = {
           + ` Over all the years of Jingle Jam, a total of ${entire} (${entireUsd}) has been raised for charity!`
           + ` Thank you for supporting some wonderful charities.`);
       })
-        .catch(() => {
+        .catch(e => {
+          console.error(`Couldn't run jinglestats command`, e);
+
           // Web request failed or returned invalid data
           reply(`Jingle Jam stats couldn't be determined. ${jaffamod.utils.getEmote('yogP3', discord)} Please try again later.`);
         });

@@ -20,8 +20,7 @@ module.exports = {
         // Validate the response from API
         if (!res || !res.data
           || !res.data.total || !res.data.total.pounds || !res.data.total.dollars) {
-          console.error(`Couldn't run total command, got bad data`, res.data);
-          throw new Error(); // Force ourselves into the catch block
+          throw new Error(`Got bad data: ${JSON.stringify(res.data)}`); // Force ourselves into the catch block
         }
 
         // Get the value raised
@@ -35,7 +34,9 @@ module.exports = {
         // Message for post-bundle
         reply(`We raised ${jaffamod.utils.getBold(raised, discord)} (${jaffamod.utils.getBold(raisedUsd, discord)}) for charity during Jingle Jam ${jingleDates.year}! Thank you for supporting some wonderful charities.`);
       })
-        .catch(() => {
+        .catch(e => {
+          console.error(`Couldn't run total command`, e);
+
           // Web request failed or returned invalid data
           reply(`The total amount couldn't be determined. ${jaffamod.utils.getEmote('yogP3', discord)} Please try again later.`);
         });
