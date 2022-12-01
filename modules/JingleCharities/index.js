@@ -25,16 +25,16 @@ module.exports = {
       if (now < jingleDates.launch) return reply(msgNotBundleLaunched(jaffamod, discord));
 
       // Get the campaign data from the Tiltify API
-      jaffamod.api.get('https://api.tiltify.com/custom/yoggscast-2021').then(res => {
+      jaffamod.api.get('https://dashboard.jinglejam.co.uk/api/tiltify').then(res => {
         // Validate the response from API
-        if (!res || !res.data.data || !res.data.data.campaigns || !Array.isArray(res.data.data.campaigns)) {
+        if (!res || !res.data || !res.data.campaigns || !Array.isArray(res.data.campaigns)) {
           console.error(`Couldn't run jinglecharities command, got bad data`, res.data);
           throw new Error(); // Force ourselves into the catch block
         }
 
         // Get totals for each charity
-        const charities = res.data.data.campaigns
-          .map(campaign => `${charityMap[campaign.cause.name] || campaign.cause.name}: ${formatMoney('£', Number(campaign.amount_raised.value))}`)
+        const charities = res.data.campaigns
+          .map(campaign => `${charityMap[campaign.name] || campaign.name}: ${formatMoney('£', campaign.total.pounds)}`)
           .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
         // Message for bundle being active
