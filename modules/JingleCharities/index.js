@@ -3,11 +3,8 @@ const { getDates, msgNotJingleJam, msgNotBundleLaunched } = require('../../utils
 
 // Shorten some charity names
 const charityMap = {
-  'Call of Duty Endowment - UK': 'CODE',
-  'Cancer Research UK': 'CRUK',
-  'The Mental Health Foundation': 'Mental Health Foundation',
-  'War Child UK': 'War Child',
-  'Whale and Dolphin Conservation (WDC)': 'WDC'
+  'Campaign Against Living Miserably (CALM)': 'CALM',
+  'Whale and Dolphin Conservations': 'WDC'
 };
 
 module.exports = {
