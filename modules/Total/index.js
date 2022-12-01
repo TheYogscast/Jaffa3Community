@@ -16,16 +16,17 @@ module.exports = {
       if (now < jingleDates.launch) return reply(msgNotBundleLaunched(jaffamod, discord));
 
       // Get the total raised from the magical API
-      jaffamod.api.get('https://jinglejam.yogscast.com/api/total').then(res => {
+      jaffamod.api.get('https://dashboard.jinglejam.co.uk/api/tiltify').then(res => {
         // Validate the response from API
-        if (!res || !res.data || !res.data.total || !res.data.total_usd) {
+        if (!res || !res.data
+          || !res.data.total || !res.data.total.pounds || !res.data.total.dollars) {
           console.error(`Couldn't run total command, got bad data`, res.data);
           throw new Error(); // Force ourselves into the catch block
         }
 
         // Get the value raised
-        const raised = formatMoney('£', res.data.total);
-        const raisedUsd = formatMoney('$', res.data.total_usd);
+        const raised = formatMoney('£', res.data.total.pounds);
+        const raisedUsd = formatMoney('$', res.data.total.dollars);
 
         // Message for bundle being active
         if (now < jingleDates.end)
