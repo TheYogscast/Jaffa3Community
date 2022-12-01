@@ -1,4 +1,4 @@
-module.exports = (message, sep = /[.,!] /, max = 500) => {
+module.exports = (message, sep = /[.,!]\s/, max = 500) => {
   // Ensure separator is a global RegExp
   const sepRe = new RegExp(sep instanceof RegExp ? sep.source : sep, (sep instanceof RegExp ? sep.flags : '') + 'g');
 
