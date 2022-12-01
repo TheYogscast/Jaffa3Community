@@ -1,13 +1,11 @@
 const formatMoney = require('../../utils/formatMoney');
 const { getDates, msgNotJingleJam, msgNotBundleLaunched } = require('../../utils/jingleJam');
+const paginate = require('../../utils/paginate');
 
-// Shorten some charity names
-const charityMap = {
-  'Call of Duty Endowment - UK': 'CODE',
-  'Cancer Research UK': 'CRUK',
-  'The Mental Health Foundation': 'Mental Health Foundation',
-  'War Child UK': 'War Child',
-  'Whale and Dolphin Conservation (WDC)': 'WDC'
+const replyPaginated = async (message, reply) => {
+  for (const page of paginate(message)) {
+    await reply(page);
+  }
 };
 
 module.exports = {
@@ -25,28 +23,29 @@ module.exports = {
       if (now < jingleDates.launch) return reply(msgNotBundleLaunched(jaffamod, discord));
 
       // Get the campaign data from the Tiltify API
-      jaffamod.api.get('https://api.tiltify.com/custom/yoggscast-2021').then(res => {
+      return jaffamod.api.get('https://dashboard.jinglejam.co.uk/api/tiltify').then(res => {
         // Validate the response from API
-        if (!res || !res.data.data || !res.data.data.campaigns || !Array.isArray(res.data.data.campaigns)) {
-          console.error(`Couldn't run jinglecharities command, got bad data`, res.data);
-          throw new Error(); // Force ourselves into the catch block
+        if (!res || !res.data || !res.data.campaigns || !Array.isArray(res.data.campaigns)) {
+          throw new Error(`Got bad data: ${JSON.stringify(res.data)}`); // Force ourselves into the catch block
         }
 
         // Get totals for each charity
-        const charities = res.data.data.campaigns
-          .map(campaign => `${charityMap[campaign.cause.name] || campaign.cause.name}: ${formatMoney('£', Number(campaign.amount_raised.value))}`)
+        const charities = res.data.campaigns
+          .map(campaign => `${campaign.name}: ${formatMoney('£', campaign.total.pounds)}`)
           .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
         // Message for bundle being active
         if (now < jingleDates.end)
-          return reply(`${charities.join(',\n')}.\nGet involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
+          return replyPaginated(`${charities.join(',\n')}.\nGet involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`, reply);
 
         // Message for post-bundle
-        reply(`${charities.join(',\n')}.\nThank you for supporting some wonderful charities.`);
+        return replyPaginated(`${charities.join(',\n')}.\nThank you for supporting some wonderful charities.`, reply);
       })
-        .catch(() => {
+        .catch(e => {
+          console.error(`Couldn't run jinglecharities command`, e);
+
           // Web request failed or returned invalid data
-          reply(`Jingle Jam charity data couldn't be determined. ${jaffamod.utils.getEmote('yogP3', discord)} Please try again later.`);
+          return reply(`Jingle Jam charity data couldn't be determined. ${jaffamod.utils.getEmote('yogP3', discord)} Please try again later.`);
         });
     });
   }
