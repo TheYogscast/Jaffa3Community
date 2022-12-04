@@ -1,12 +1,6 @@
 const formatMoney = require('../../utils/formatMoney');
 const { getDates, msgNotJingleJam, msgNotBundleLaunched } = require('../../utils/jingleJam');
-const paginate = require('../../utils/paginate');
-
-const replyPaginated = async (message, reply) => {
-  for (const page of paginate(message)) {
-    await reply(page);
-  }
-};
+const { paginateReply } = require('../../utils/paginate');
 
 module.exports = {
   name: 'JingleCharities',
@@ -36,10 +30,10 @@ module.exports = {
 
         // Message for bundle being active
         if (now < jingleDates.end)
-          return replyPaginated(`${charities.join(',\n')}.\nGet involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`, reply);
+          return paginateReply(`${charities.join(',\n')}.\nGet involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`, reply, discord);
 
         // Message for post-bundle
-        return replyPaginated(`${charities.join(',\n')}.\nThank you for supporting some wonderful charities.`, reply);
+        return paginateReply(`${charities.join(',\n')}.\nThank you for supporting some wonderful charities.`, reply, discord);
       })
         .catch(e => {
           console.error(`Couldn't run jinglecharities command`, e);

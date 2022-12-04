@@ -1,13 +1,7 @@
 const formatMoney = require('../../utils/formatMoney');
 const shookEmote = require('../../utils/shookEmote');
 const { getDates, msgNotJingleJam, msgNotBundleLaunched } = require('../../utils/jingleJam');
-const paginate = require('../../utils/paginate');
-
-const replyPaginated = async (message, reply) => {
-  for (const page of paginate(message)) {
-    await reply(page);
-  }
-};
+const { paginateReply } = require('../../utils/paginate');
 
 module.exports = {
   name: 'JingleStats',
@@ -61,20 +55,20 @@ module.exports = {
 
         // Message for bundle being active
         if (now < jingleDates.end)
-          return replyPaginated(`We've raised a total of ${total} (${totalUsd}) for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${bundles} collections sold, during Jingle Jam ${jingleDates.year} so far!`
+          return paginateReply(`We've raised a total of ${total} (${totalUsd}) for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${bundles} collections sold, during Jingle Jam ${jingleDates.year} so far!`
             + ` That works out to an average of ${average} (${averageUsd}) per donation, and ${perBundle} donated to awesome charities per collection claimed! ${shookEmote(jaffamod, discord)}`
             + ` Per hour, that's approximately ${perHour} donated and ${bundlesPerHour} collections claimed.`
             + ` Or, instead, that's roughly ${bundlesPerDay} collections claimed and ${perDay} donated per day on average.`
             + ` Over all the years of Jingle Jam, a total of ${entire} (${entireUsd}) has been raised for charity!`
-            + ` Get involved by donating now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`, reply);
+            + ` Get involved by donating now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`, reply, discord);
 
         // Message for post-bundle
-        return replyPaginated(`We raised a total of ${total} (${totalUsd}) for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${bundles} collections claimed, during Jingle Jam ${jingleDates.year}!`
+        return paginateReply(`We raised a total of ${total} (${totalUsd}) for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${bundles} collections claimed, during Jingle Jam ${jingleDates.year}!`
           + ` That worked out to ${average} (${averageUsd}) per donation, and ${perBundle} donated to awesome charities per collection claimed on average! ${shookEmote(jaffamod, discord)}`
           + ` Hourly, ${bundlesPerHour} collections were claimed and ${perHour} was donated to charity.`
           + ` Or, per day during the Jingle Jam, ${bundlesPerDay} collections were claimed and ${perDay} donated.`
           + ` Over all the years of Jingle Jam, a total of ${entire} (${entireUsd}) has been raised for charity!`
-          + ` Thank you for supporting some wonderful charities.`, reply);
+          + ` Thank you for supporting some wonderful charities.`, reply, discord);
       })
         .catch(e => {
           console.error(`Couldn't run jinglestats command`, e);

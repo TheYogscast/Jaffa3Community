@@ -1,4 +1,4 @@
-module.exports = (message, sep = /[.,!]\s/, max = 500) => {
+const paginate = (message, sep = /[.,!]\s/, max = 500) => {
   // Ensure separator is a global RegExp
   const sepRe = new RegExp(sep instanceof RegExp ? sep.source : sep, (sep instanceof RegExp ? sep.flags : '') + 'g');
 
@@ -25,4 +25,15 @@ module.exports = (message, sep = /[.,!]\s/, max = 500) => {
   }
 
   return messages;
+};
+
+const paginateReply = async (message, reply, discord, { sep, max } = {}) => {
+  for (const page of paginate(message, sep, max || (discord ? 2000 : 500))) {
+    await reply(page);
+  }
+};
+
+module.exports = {
+  paginate,
+  paginateReply
 };
