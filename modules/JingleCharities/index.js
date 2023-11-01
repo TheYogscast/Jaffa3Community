@@ -1,5 +1,5 @@
 const formatMoney = require('../../utils/formatMoney');
-const { getDates, msgNotJingleJam, msgNotBundleLaunched } = require('../../utils/jingleJam');
+const { getDates, msgNotJingleJam, msgNotBundleLaunched, validateResponse } = require('../../utils/jingleJam');
 const { paginateReply } = require('../../utils/paginate');
 
 module.exports = {
@@ -18,22 +18,21 @@ module.exports = {
 
       // Get the campaign data from the Tiltify API
       return jaffamod.api.get('https://dashboard.jinglejam.co.uk/api/tiltify').then(res => {
-        // Validate the response from API
-        if (!res || !res.data || !res.data.campaigns || !Array.isArray(res.data.campaigns)) {
-          throw new Error(`Got bad data: ${JSON.stringify(res.data)}`); // Force ourselves into the catch block
-        }
+        // Validate the response from API, forcing ourselves into the catch block if it's invalid
+        const error = validateResponse(res);
+        if (error) throw new Error(`Got bad data: ${error}: ${JSON.stringify(res && res.data)}`);
 
         // Get totals for each charity
-        const charities = res.data.campaigns
-          .map(campaign => `${campaign.name}: ${formatMoney('£', campaign.total.pounds)}`)
+        const causes = res.data.causes
+          .map(cause => `${cause.name}: ${formatMoney('£', cause.raised.yogscast + cause.raised.fundraisers)}`)
           .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
         // Message for bundle being active
         if (now < jingleDates.end)
-          return paginateReply(`${charities.join(',\n')}.\nGet involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`, reply, discord);
+          return paginateReply(`${causes.join(',\n')}.\nGet involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`, reply, discord);
 
         // Message for post-bundle
-        return paginateReply(`${charities.join(',\n')}.\nThank you for supporting some wonderful charities.`, reply, discord);
+        return paginateReply(`${causes.join(',\n')}.\nThank you for supporting some wonderful causes.`, reply, discord);
       })
         .catch(e => {
           console.error(`Couldn't run jinglecharities command`, e);
