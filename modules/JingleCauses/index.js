@@ -3,9 +3,9 @@ const { getDates, msgNotJingleJam, msgNotBundleLaunched, validateResponse } = re
 const { paginateReply } = require('../../utils/paginate');
 
 module.exports = {
-  name: 'JingleCharities',
+  name: 'JingleCauses',
   module(jaffamod) {
-    jaffamod.registerCommand('jinglecharities', (message, reply, discord) => {
+    jaffamod.registerCommand('jinglecauses', (message, reply, discord) => {
       // Get key dates for JingleJam
       const jingleDates = getDates();
       const now = new Date();
@@ -38,8 +38,10 @@ module.exports = {
           console.error(`Couldn't run jinglecharities command`, e);
 
           // Web request failed or returned invalid data
-          return reply(`Jingle Jam charity data couldn't be determined. ${jaffamod.utils.getEmote('yogP3', discord)} Please try again later.`);
+          return reply(`Jingle Jam cause data couldn't be determined. ${jaffamod.utils.getEmote('yogP3', discord)} Please try again later.`);
         });
     });
+
+    jaffamod.registerCommand('jinglecharities', 'jinglecauses');
   }
 };
