@@ -1,6 +1,6 @@
 const formatMoney = require('../../utils/formatMoney');
 const shookEmote = require('../../utils/shookEmote');
-const { getDates, msgNotJingleJam, msgNotBundleLaunched, validateResponse } = require('../../utils/jingleJam');
+const { getDates, msgNotJingleJam, msgNotLaunched, validateResponse } = require('../../utils/jingleJam');
 const { paginateReply } = require('../../utils/paginate');
 
 module.exports = {
@@ -14,8 +14,8 @@ module.exports = {
       // Only run during JingleJam + first week of January
       if (now < jingleDates.start || now > jingleDates.extended) return reply(msgNotJingleJam(jaffamod, discord));
 
-      // Bundle hasn't yet launched
-      if (now < jingleDates.launch) return reply(msgNotBundleLaunched(jaffamod, discord));
+      // Collection hasn't yet launched
+      if (now < jingleDates.launch) return reply(msgNotLaunched(jaffamod, discord));
 
       // Get the total raised from the magical API
       return jaffamod.api.get('https://dashboard.jinglejam.co.uk/api/tiltify').then(res => {
@@ -38,32 +38,32 @@ module.exports = {
 
         const average = jaffamod.utils.getBold(formatMoney('£', total / res.data.donations.count), discord);
 
-        const bundles = jaffamod.utils.getBold(res.data.collections.redeemed.toLocaleString(), discord);
-        const perBundle = jaffamod.utils.getBold(formatMoney('£', total / res.data.collections.redeemed), discord);
+        const collections = jaffamod.utils.getBold(res.data.collections.redeemed.toLocaleString(), discord);
+        const perCollection = jaffamod.utils.getBold(formatMoney('£', total / res.data.collections.redeemed), discord);
 
         const perHour = jaffamod.utils.getBold(formatMoney('£', total / hoursSinceLaunch), discord);
-        const bundlesPerHour = jaffamod.utils.getBold(Math.round(res.data.collections.redeemed / hoursSinceLaunch).toLocaleString(), discord);
+        const collectionsPerHour = jaffamod.utils.getBold(Math.round(res.data.collections.redeemed / hoursSinceLaunch).toLocaleString(), discord);
         const perDay = jaffamod.utils.getBold(formatMoney('£', total / daysSinceLaunch), discord);
-        const bundlesPerDay = jaffamod.utils.getBold(Math.round(res.data.collections.redeemed / daysSinceLaunch).toLocaleString(), discord);
+        const collectionsPerDay = jaffamod.utils.getBold(Math.round(res.data.collections.redeemed / daysSinceLaunch).toLocaleString(), discord);
 
-        const entire = jaffamod.utils.getBold(formatMoney('£', res.data.history.reduce((sum, history) => sum + history.total.pounds, 0)), discord);
+        const entire = jaffamod.utils.getBold(formatMoney('£', res.data.history.reduce((sum, history) => sum + history.total.pounds, total)), discord);
 
-        // Message for bundle being active
+        // Message for collection being active
         if (now < jingleDates.end)
-          return paginateReply(`We've raised a total of ${totalRaised} for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${bundles} collections sold, during Jingle Jam ${jingleDates.year} so far!`
-            + ` That works out to an average of ${average} per donation, and ${perBundle} donated to awesome charities per collection claimed! ${shookEmote(jaffamod, discord)}`
-            + ` Per hour, that's approximately ${perHour} donated and ${bundlesPerHour} collections claimed.`
-            + ` Or, instead, that's roughly ${bundlesPerDay} collections claimed and ${perDay} donated per day on average.`
-            + ` Over all the years of Jingle Jam, a total of ${entire} has been raised for charity!`
+          return paginateReply(`We've raised a total of ${totalRaised} for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${collections} games collections redeemed, during Jingle Jam ${jingleDates.year} so far!`
+            + ` That works out to an average of ${average} per donation, and ${perCollection} donated to awesome causes per collection claimed! ${shookEmote(jaffamod, discord)}`
+            + ` Per hour, that's approximately ${perHour} donated and ${collectionsPerHour} collections claimed.`
+            + ` Or, instead, that's roughly ${collectionsPerDay} collections claimed and ${perDay} donated per day on average.`
+            + ` Over all the years of Jingle Jam, including this year, a total of ${entire} has been raised for some amazing causes!`
             + ` Get involved by donating now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`, reply, discord);
 
-        // Message for post-bundle
-        return paginateReply(`We raised a total of ${totalRaised} for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${bundles} collections claimed, during Jingle Jam ${jingleDates.year}!`
-          + ` That worked out to ${average} per donation, and ${perBundle} donated to awesome charities per collection claimed on average! ${shookEmote(jaffamod, discord)}`
-          + ` Hourly, ${bundlesPerHour} collections were claimed and ${perHour} was donated to charity.`
-          + ` Or, per day during the Jingle Jam, ${bundlesPerDay} collections were claimed and ${perDay} donated.`
-          + ` Over all the years of Jingle Jam, a total of ${entire} has been raised for charity!`
-          + ` Thank you for supporting some wonderful charities.`, reply, discord);
+        // Message for post-collection
+        return paginateReply(`We raised a total of ${totalRaised} for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${collections} games collections redeemed, during Jingle Jam ${jingleDates.year}!`
+          + ` That worked out to ${average} per donation, and ${perCollection} donated per collection claimed on average! ${shookEmote(jaffamod, discord)}`
+          + ` Hourly, ${collectionsPerHour} collections were claimed and ${perHour} was donated to some awesome causes.`
+          + ` Or, per day during the Jingle Jam, ${collectionsPerDay} collections were claimed and ${perDay} donated.`
+          + ` Over all the years of Jingle Jam, including this year, a total of ${entire} has been raised!`
+          + ` Thank you for supporting some wonderful causes.`, reply, discord);
       })
         .catch(e => {
           console.error(`Couldn't run jinglestats command`, e);
