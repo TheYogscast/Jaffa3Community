@@ -12,7 +12,7 @@ const getDates = (d = undefined) => {
 
 const msgNotJingleJam = (jaffamod, discord) => `It's not currently Jingle Jam time. ${jaffamod.utils.getEmote('yogP3', discord)} We look forward to seeing you in December to raise more money for charity once again!`;
 
-const msgNotLaunched = (jaffamod, discord) => `Jingle Jam hasn't launched yet! ${jaffamod.utils.getEmote('yogP3', discord)} Get ready to get the games collection and raise some money for charity once again!`;
+const msgNotLaunched = (jaffamod, discord) => `Jingle Jam hasn't launched yet! ${jaffamod.utils.getEmote('yogP3', discord)} Get ready to get the Games Collection and raise some money for charity once again!`;
 
 const hasKey = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
 const isObject = obj => typeof obj === 'object' && obj !== null;

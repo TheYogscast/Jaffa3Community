@@ -29,7 +29,7 @@ module.exports = {
 
         // Message for collection being active
         if (now < jingleDates.end)
-          return paginateReply(`${causes.join(',\n')}.\nGet involved and donate at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`, reply, discord);
+          return paginateReply(`${causes.join(',\n')}.\nGet involved and donate at ${jaffamod.utils.getLink('https://jinglejam.co.uk/donate', discord)}`, reply, discord);
 
         // Message for post-collection
         return paginateReply(`${causes.join(',\n')}.\nThank you for supporting some wonderful causes.`, reply, discord);

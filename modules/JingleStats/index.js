@@ -50,15 +50,15 @@ module.exports = {
 
         // Message for collection being active
         if (now < jingleDates.end)
-          return paginateReply(`We've raised a total of ${totalRaised} for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${collections} games collections redeemed, during Jingle Jam ${jingleDates.year} so far!`
+          return paginateReply(`We've raised a total of ${totalRaised} for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${collections} Games Collections redeemed, during Jingle Jam ${jingleDates.year} so far!`
             + ` That works out to an average of ${average} per donation, and ${perCollection} donated to awesome causes per collection claimed! ${shookEmote(jaffamod, discord)}`
             + ` Per hour, that's approximately ${perHour} donated and ${collectionsPerHour} collections claimed.`
             + ` Or, instead, that's roughly ${collectionsPerDay} collections claimed and ${perDay} donated per day on average.`
             + ` Over all the years of Jingle Jam, including this year, a total of ${entire} has been raised for some amazing causes!`
-            + ` Get involved by donating now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`, reply, discord);
+            + ` Get involved by donating now at ${jaffamod.utils.getLink('https://jinglejam.co.uk/donate', discord)}`, reply, discord);
 
         // Message for post-collection
-        return paginateReply(`We raised a total of ${totalRaised} for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${collections} games collections redeemed, during Jingle Jam ${jingleDates.year}!`
+        return paginateReply(`We raised a total of ${totalRaised} for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${collections} Games Collections redeemed, during Jingle Jam ${jingleDates.year}!`
           + ` That worked out to ${average} per donation, and ${perCollection} donated per collection claimed on average! ${shookEmote(jaffamod, discord)}`
           + ` Hourly, ${collectionsPerHour} collections were claimed and ${perHour} was donated to some awesome causes.`
           + ` Or, per day during the Jingle Jam, ${collectionsPerDay} collections were claimed and ${perDay} donated.`

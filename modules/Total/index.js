@@ -29,7 +29,7 @@ module.exports = {
 
         // Message for collection being active
         if (now < jingleDates.end)
-          return reply(`We've raised ${jaffamod.utils.getBold(raised, discord)} (${jaffamod.utils.getBold(raisedUsd, discord)}) for charity during Jingle Jam ${jingleDates.year} so far! Donate now at ${jaffamod.utils.getLink('https://jinglejam.tiltify.com', discord)}`);
+          return reply(`We've raised ${jaffamod.utils.getBold(raised, discord)} (${jaffamod.utils.getBold(raisedUsd, discord)}) for charity during Jingle Jam ${jingleDates.year} so far! Donate now at ${jaffamod.utils.getLink('https://jinglejam.co.uk/donate', discord)}`);
 
         // Message for post-collection
         reply(`We raised ${jaffamod.utils.getBold(raised, discord)} (${jaffamod.utils.getBold(raisedUsd, discord)}) for charity during Jingle Jam ${jingleDates.year}! Thank you for supporting some wonderful charities.`);
