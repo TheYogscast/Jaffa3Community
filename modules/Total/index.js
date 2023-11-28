@@ -5,6 +5,9 @@ module.exports = {
   name: 'Total',
   module(jaffamod) {
     jaffamod.registerCommand('total', (message, reply, discord) => {
+      // Do not run in Discord, JingleBot is there
+      if (discord) return;
+      
       // Get key dates for JingleJam
       const jingleDates = getDates();
       const now = new Date();
