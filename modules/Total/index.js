@@ -1,5 +1,5 @@
 const formatMoney = require('../../utils/formatMoney');
-const { getDates, msgNotJingleJam, msgNotLaunched } = require('../../utils/jingleJam');
+const { getDates, msgNotJingleJam, msgNotLaunched, validateResponse } = require('../../utils/jingleJam');
 
 module.exports = {
   name: 'Total',
@@ -20,22 +20,21 @@ module.exports = {
 
       // Get the total raised from the magical API
       jaffamod.api.get('https://dashboard.jinglejam.co.uk/api/tiltify').then(res => {
-        // Validate the response from API
-        if (!res || !res.data
-          || !res.data.total || !res.data.total.pounds || !res.data.total.dollars) {
-          throw new Error(`Got bad data: ${JSON.stringify(res.data)}`); // Force ourselves into the catch block
-        }
+        // Validate the response from API, forcing ourselves into the catch block if it's invalid
+        const error = validateResponse(res);
+        if (error) throw new Error(`Got bad data: ${error}: ${JSON.stringify(res && res.data)}`);
 
-        // Get the value raised
-        const raised = formatMoney('£', res.data.total.pounds);
-        const raisedUsd = formatMoney('$', res.data.total.dollars);
+        // Process data
+        const total = res.data.raised.yogscast + res.data.raised.fundraisers;
+        const totalRaised = jaffamod.utils.getBold(formatMoney('£', total), discord);
+        const totalRaisedUsd = jaffamod.utils.getBold(formatMoney('$', total * res.data.avgConversionRate), discord);
 
         // Message for collection being active
         if (now < jingleDates.end)
-          return reply(`We've raised ${jaffamod.utils.getBold(raised, discord)} (${jaffamod.utils.getBold(raisedUsd, discord)}) for charity during Jingle Jam ${jingleDates.year} so far! Donate now at ${jaffamod.utils.getLink('https://jinglejam.co.uk/donate', discord)}`);
+          return reply(`We've raised ${totalRaised} (${totalRaisedUsd}) for charity during Jingle Jam ${jingleDates.year} so far! Donate now at ${jaffamod.utils.getLink('https://jinglejam.co.uk/donate', discord)}`);
 
         // Message for post-collection
-        reply(`We raised ${jaffamod.utils.getBold(raised, discord)} (${jaffamod.utils.getBold(raisedUsd, discord)}) for charity during Jingle Jam ${jingleDates.year}! Thank you for supporting some wonderful charities.`);
+        reply(`We raised ${totalRaised} (${totalRaisedUsd}) for charity during Jingle Jam ${jingleDates.year}! Thank you for supporting some wonderful charities.`);
       })
         .catch(e => {
           console.error(`Couldn't run total command`, e);
