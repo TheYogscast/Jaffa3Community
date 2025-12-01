@@ -25,12 +25,12 @@ const validateResponse = res => {
     return 'Response does not contain a data object';
 
   // Validate the raised data
-  if (!hasKey(res.data, 'raised') || !isObject(res.data.raised))
-    return 'Response#data does not contain a raised object';
-  if (!hasKey(res.data.raised, 'yogscast') || typeof res.data.raised.yogscast !== 'number')
-    return 'Response#data#raised does not contain a yogscast number`';
-  if (!hasKey(res.data.raised, 'fundraisers') || typeof res.data.raised.fundraisers !== 'number')
-    return 'Response#data#raised does not contain a fundraisers number';
+  if (!hasKey(res.data, 'raised') || typeof res.data.raised !== 'number')
+    return 'Response#data does not contain a raised number';
+
+  // Validate the conversion rate data
+  if (!hasKey(res.data, 'dollarConversionRate') || typeof res.data.dollarConversionRate !== 'number')
+    return 'Response#data does not contain an dollarConversionRate number';
 
   // Validate the collections data
   if (!hasKey(res.data, 'collections') || !isObject(res.data.collections))
@@ -39,10 +39,8 @@ const validateResponse = res => {
     return 'Response#data#collections does not contain a redeemed number';
 
   // Validate the donations data
-  if (!hasKey(res.data, 'donations') || !isObject(res.data.donations))
+  if (!hasKey(res.data, 'donations') || typeof res.data.donations !== 'number')
     return 'Response#data does not contain a donations object';
-  if (!hasKey(res.data.donations, 'count') || typeof res.data.donations.count !== 'number')
-    return 'Response#data#donations does not contain a count number';
 
   // Validate the history data
   if (!hasKey(res.data, 'history') || !Array.isArray(res.data.history))
@@ -64,12 +62,8 @@ const validateResponse = res => {
       return 'Response#data#causes#[] is not an object';
     if (!hasKey(cause, 'name') || typeof cause.name !== 'string')
       return 'Response#data#causes#[] does not contain a name string';
-    if (!hasKey(cause, 'raised') || !isObject(cause.raised))
-      return 'Response#data#causes#[] does not contain a raised object';
-    if (!hasKey(cause.raised, 'yogscast') || typeof cause.raised.yogscast !== 'number')
-      return 'Response#data#causes#[]#raised does not contain a yogscast number';
-    if (!hasKey(cause.raised, 'fundraisers') || typeof cause.raised.fundraisers !== 'number')
-      return 'Response#data#causes#[]#raised does not contain a fundraisers number';
+    if (!hasKey(cause, 'raised') || typeof cause.raised !== 'number')
+      return 'Response#data#causes#[] does not contain a raised number';
   }
 
   return null;

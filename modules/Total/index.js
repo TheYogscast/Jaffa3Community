@@ -25,9 +25,8 @@ module.exports = {
         if (error) throw new Error(`Got bad data: ${error}: ${JSON.stringify(res && res.data)}`);
 
         // Process data
-        const total = res.data.raised.yogscast + res.data.raised.fundraisers;
-        const totalRaised = jaffamod.utils.getBold(formatMoney('£', total), discord);
-        const totalRaisedUsd = jaffamod.utils.getBold(formatMoney('$', total * res.data.avgConversionRate), discord);
+        const totalRaised = jaffamod.utils.getBold(formatMoney('£', res.data.raised), discord);
+        const totalRaisedUsd = jaffamod.utils.getBold(formatMoney('$', res.data.raised * res.data.dollarConversionRate), discord);
 
         // Message for collection being active
         if (now < jingleDates.end)

@@ -31,29 +31,23 @@ module.exports = {
         const hoursSinceLaunch = Math.max(timeSinceLaunch / 1000 / 60 / 60, 1);
         const daysSinceLaunch = Math.max(hoursSinceLaunch / 24, 1);
 
-        // Process data
-        const total = res.data.raised.yogscast + res.data.raised.fundraisers;
-
         // Stats!
-        const totalRaised = jaffamod.utils.getBold(formatMoney('£', total), discord);
-        const totalYogscast = jaffamod.utils.getBold(formatMoney('£', res.data.raised.yogscast), discord);
-        const totalFundraisers = jaffamod.utils.getBold(formatMoney('£', res.data.raised.fundraisers), discord);
-
-        const average = jaffamod.utils.getBold(formatMoney('£', total / res.data.donations.count), discord);
+        const total = jaffamod.utils.getBold(formatMoney('£', res.data.raised), discord);
+        const average = jaffamod.utils.getBold(formatMoney('£', res.data.raised / res.data.donations), discord);
 
         const collections = jaffamod.utils.getBold(res.data.collections.redeemed.toLocaleString(), discord);
-        const perCollection = jaffamod.utils.getBold(formatMoney('£', total / res.data.collections.redeemed), discord);
+        const perCollection = jaffamod.utils.getBold(formatMoney('£', res.data.raised / res.data.collections.redeemed), discord);
 
-        const perHour = jaffamod.utils.getBold(formatMoney('£', total / hoursSinceLaunch), discord);
+        const perHour = jaffamod.utils.getBold(formatMoney('£', res.data.raised / hoursSinceLaunch), discord);
         const collectionsPerHour = jaffamod.utils.getBold(Math.round(res.data.collections.redeemed / hoursSinceLaunch).toLocaleString(), discord);
-        const perDay = jaffamod.utils.getBold(formatMoney('£', total / daysSinceLaunch), discord);
+        const perDay = jaffamod.utils.getBold(formatMoney('£', res.data.raised / daysSinceLaunch), discord);
         const collectionsPerDay = jaffamod.utils.getBold(Math.round(res.data.collections.redeemed / daysSinceLaunch).toLocaleString(), discord);
 
-        const entire = jaffamod.utils.getBold(formatMoney('£', res.data.history.reduce((sum, history) => sum + history.total.pounds, total)), discord);
+        const entire = jaffamod.utils.getBold(formatMoney('£', res.data.history.reduce((sum, history) => sum + history.total.pounds, res.data.raised)), discord);
 
         // Message for collection being active
         if (now < jingleDates.end)
-          return paginateReply(`We've raised a total of ${totalRaised} for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${collections} Games Collections redeemed, during Jingle Jam ${jingleDates.year} so far!`
+          return paginateReply(`We've raised a total of ${total} for charity, with ${collections} Games Collections redeemed, during Jingle Jam ${jingleDates.year} so far!`
             + ` That works out to an average of ${average} per donation, and ${perCollection} donated to awesome causes per collection claimed! ${shookEmote(jaffamod, discord)}`
             + ` Per hour, that's approximately ${perHour} donated and ${collectionsPerHour} collections claimed.`
             + ` Or, instead, that's roughly ${collectionsPerDay} collections claimed and ${perDay} donated per day on average.`
@@ -61,7 +55,7 @@ module.exports = {
             + ` Get involved by donating now at ${jaffamod.utils.getLink('https://jinglejam.co.uk/donate', discord)}`, reply, discord);
 
         // Message for post-collection
-        return paginateReply(`We raised a total of ${totalRaised} for charity (${totalYogscast} by the Yogscast, ${totalFundraisers} from fundraisers), with ${collections} Games Collections redeemed, during Jingle Jam ${jingleDates.year}!`
+        return paginateReply(`We raised a total of ${total} for charity, with ${collections} Games Collections redeemed, during Jingle Jam ${jingleDates.year}!`
           + ` That worked out to ${average} per donation, and ${perCollection} donated per collection claimed on average! ${shookEmote(jaffamod, discord)}`
           + ` Hourly, ${collectionsPerHour} collections were claimed and ${perHour} was donated to some awesome causes.`
           + ` Or, per day during the Jingle Jam, ${collectionsPerDay} collections were claimed and ${perDay} donated.`

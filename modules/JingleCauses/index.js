@@ -27,7 +27,7 @@ module.exports = {
 
         // Get totals for each charity
         const causes = res.data.causes
-          .map(cause => `${cause.name}: ${formatMoney('£', cause.raised.yogscast + cause.raised.fundraisers)}`)
+          .map(cause => `${cause.name}: ${formatMoney('£', cause.raised)}`)
           .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
         // Message for collection being active
